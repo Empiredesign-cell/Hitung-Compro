@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Harga Cetak Buku</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 py-8 px-4 sm:px-6 lg:px-8 font-sans min-h-screen">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- Header Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-slate-900 p-4 sm:px-8 sm:py-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+            <div class="flex items-center gap-4">
+                <div class="p-3.5 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-600/20">
+                    <i data-lucide="calculator" class="h-7 w-7"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
+                        Kalkulator Cetak
+                    </h1>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">Estimasi biaya otomatis & presisi</p>
+                </div>
+            </div>
+            <button onclick="toggleDarkMode()" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-medium border border-transparent dark:border-slate-700">
+                <span id="mode-icon-container"><i data-lucide="moon" class="h-5 w-5 text-indigo-500"></i></span>
+                <span id="mode-text">Dark Mode</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Kolom Kiri: Form Input -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Bagian Informasi Utama -->
+                <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
+                        <i data-lucide="book" class="h-5 w-5 text-blue-500"></i>
+                        Informasi Utama
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Jumlah Buku (Pcs)</label>
+                            <input type="number" id="jumlahBuku" min="1" value="1" oninput="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-900 dark:text-white transition-all" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Total Halaman (Keseluruhan)</label>
+                            <input type="number" id="totalHalaman" min="1" value="50" oninput="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-900 dark:text-white transition-all" />
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Termasuk cover depan & belakang</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Spesifikasi Cover -->
+                <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
+                        <i data-lucide="file-text" class="h-5 w-5 text-orange-500"></i>
+                        Spesifikasi Cover
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Bahan Cover</label>
+                            <select id="bahanCover" onchange="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="AC">Art Carton 260gsm</option>
+                                <option value="AP">Art Paper 150gsm</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sisi Cetak</label>
+                            <select id="sisiCover" onchange="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="1">1 Sisi (Luar Saja)</option>
+                                <option value="2" selected>2 Sisi (Luar & Dalam)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Laminasi</label>
+                            <select id="laminasiCover" onchange="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="Tidak">Tidak</option>
+                                <option value="1" selected>1 Sisi</option>
+                                <option value="2">2 Sisi</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Spesifikasi Isi -->
+                <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
+                        <i data-lucide="layers" class="h-5 w-5 text-emerald-500"></i>
+                        Spesifikasi Isi Buku
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-center transition-colors">
+                            <span class="block text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">Halaman Isi (Otomatis)</span>
+                            <span id="out-halamanIsi" class="text-2xl font-bold text-slate-800 dark:text-white">46 Hal</span>
+                            <span class="text-xs text-slate-400 dark:text-slate-500 mt-1">Total hal dikurangi cover</span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Bahan Isi</label>
+                            <select id="bahanIsi" onchange="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="AP">Art Paper 150gsm</option>
+                                <option value="AC">Art Carton 260gsm</option>
+                                <option value="HVSW">HVS 100gsm Warna</option>
+                                <option value="HVSBW">HVS Black & White</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sisi Cetak</label>
+                            <select id="sisiIsi" onchange="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="2" selected>2 Sisi (Bolak Balik)</option>
+                                <option value="1">1 Sisi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Laminasi</label>
+                            <select id="laminasiIsi" onchange="calculate()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="Tidak" selected>Tidak</option>
+                                <option value="1">1 Sisi</option>
+                                <option value="2">2 Sisi</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Finishing -->
+                <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
+                        <i data-lucide="scissors" class="h-5 w-5 text-pink-500"></i>
+                        Finishing & Jilid
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="cursor-pointer h-full">
+                            <input type="radio" name="finishing" value="Steples" class="peer sr-only" onchange="calculate()" checked />
+                            <div class="border-2 rounded-2xl p-5 text-center transition-all h-full flex flex-col justify-center border-slate-200 dark:border-slate-700 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 dark:peer-checked:bg-blue-900/20 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                <span class="font-bold text-slate-800 dark:text-slate-100 block text-lg">Steples</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 mt-1.5">Standar Majalah/Buku Tipis</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer h-full">
+                            <input type="radio" name="finishing" value="Spiral" class="peer sr-only" onchange="calculate()" />
+                            <div class="border-2 rounded-2xl p-5 text-center transition-all h-full flex flex-col justify-center border-slate-200 dark:border-slate-700 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 dark:peer-checked:bg-blue-900/20 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                <span class="font-bold text-slate-800 dark:text-slate-100 block text-lg">Jilid Spiral</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 mt-1.5">Premium / Buku Tebal</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer h-full">
+                            <input type="radio" name="finishing" value="Lem Panas" id="radio-LemPanas" class="peer sr-only" onchange="calculate()" />
+                            <div class="border-2 rounded-2xl p-5 text-center transition-all h-full flex flex-col justify-center border-slate-200 dark:border-slate-700 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 dark:peer-checked:bg-blue-900/20 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:bg-slate-100 dark:peer-disabled:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 peer-disabled:hover:bg-slate-100 dark:peer-disabled:hover:bg-slate-800/50">
+                                <span class="font-bold text-slate-800 dark:text-slate-100 block text-lg">Lem Panas</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 mt-1.5">Standar Buku Tebal / Novel</span>
+                                <span id="warn-LemPanas" class="text-xs text-red-500 mt-2 font-medium" style="display: none;">Khusus Cover Art Carton</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer h-full">
+                            <input type="radio" name="finishing" value="Hard Cover" id="radio-HardCover" class="peer sr-only" onchange="calculate()" />
+                            <div class="border-2 rounded-2xl p-5 text-center transition-all h-full flex flex-col justify-center border-slate-200 dark:border-slate-700 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 dark:peer-checked:bg-blue-900/20 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:bg-slate-100 dark:peer-disabled:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 peer-disabled:hover:bg-slate-100 dark:peer-disabled:hover:bg-slate-800/50">
+                                <span class="font-bold text-slate-800 dark:text-slate-100 block text-lg">Hard Cover</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 mt-1.5">Tampilan Premium & Eksklusif</span>
+                                <span id="warn-HardCover" class="text-xs text-red-500 mt-2 font-medium" style="display: none;">Khusus Cover Art Paper</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+
+            <!-- Kolom Kanan: Rincian Kalkulasi -->
+            <div class="lg:col-span-1">
+                <div class="bg-slate-900 dark:bg-slate-800 rounded-3xl shadow-xl p-6 sm:p-8 text-white sticky top-8 border border-slate-800 dark:border-slate-700">
+                    <div class="flex items-center gap-3 mb-6 pb-6 border-b border-slate-700/50">
+                        <div class="p-2 bg-blue-500/20 rounded-full">
+                            <i data-lucide="check-circle" class="h-6 w-6 text-blue-400"></i>
+                        </div>
+                        <h2 class="text-xl font-bold tracking-wide">Rincian Biaya</h2>
+                    </div>
+
+                    <div class="space-y-5 text-sm">
+                        
+                        <!-- Rincian Kebutuhan Kertas -->
+                        <div class="pb-5 border-b border-slate-700/50">
+                            <h3 class="font-semibold text-blue-300 mb-3 text-xs uppercase tracking-wider">Material Cetak (A3)</h3>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-slate-400">Cover (1 lbr/buku)</span>
+                                <span id="out-totLembarCover" class="font-semibold text-slate-200">0 lbr</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span id="out-lembarA3Isi" class="text-slate-400">Isi (0 lbr/buku)</span>
+                                <span id="out-totLembarIsi" class="font-semibold text-slate-200">0 lbr</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-700/30">
+                                <span class="text-slate-300 font-medium">Total Kertas</span>
+                                <span id="out-totLembarSemua" class="font-bold text-yellow-400">0 lbr</span>
+                            </div>
+                        </div>
+
+                        <!-- Rincian Harga Partisi -->
+                        <div class="pb-5 border-b border-slate-700/50 space-y-3">
+                            <div>
+                                <div class="flex justify-between text-slate-400 text-xs mb-0.5">
+                                    <span id="out-txtHargaSatCover">Cetak Cover (Rp 0/lbr)</span>
+                                </div>
+                                <div class="flex justify-between font-medium">
+                                    <span class="text-slate-200">Subtotal Cover</span>
+                                    <span id="out-subCover">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-slate-400 text-xs mb-0.5">
+                                    <span id="out-txtHargaSatIsi">Cetak Isi (Rp 0/lbr)</span>
+                                </div>
+                                <div class="flex justify-between font-medium">
+                                    <span class="text-slate-200">Subtotal Isi</span>
+                                    <span id="out-subIsi">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <div id="row-lamCover">
+                                <div class="flex justify-between text-slate-400 text-xs mb-0.5">
+                                    <span id="out-txtHargaSatLamCover">Lam. Cover (Rp 0/lbr)</span>
+                                </div>
+                                <div class="flex justify-between font-medium">
+                                    <span class="text-slate-200">Subtotal Lam. Cover</span>
+                                    <span id="out-subLamCover">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <div id="row-lamIsi">
+                                <div class="flex justify-between text-slate-400 text-xs mb-0.5">
+                                    <span id="out-txtHargaSatLamIsi">Lam. Isi (Rp 0/lbr)</span>
+                                </div>
+                                <div class="flex justify-between font-medium">
+                                    <span class="text-slate-200">Subtotal Lam. Isi</span>
+                                    <span id="out-subLamIsi">Rp 0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rincian Finishing & Potong -->
+                        <div class="pb-5 border-b border-slate-700/50 space-y-3">
+                            <div>
+                                <div class="flex justify-between text-slate-400 text-xs mb-0.5">
+                                    <span id="out-txtHargaSatFin">Jilid Steples (Rp 0/buku)</span>
+                                </div>
+                                <div class="flex justify-between font-medium">
+                                    <span class="text-slate-200">Subtotal Jilid</span>
+                                    <span id="out-subFin">Rp 0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between font-medium items-center pt-2">
+                                <span class="text-slate-200">Biaya Potong (Global)</span>
+                                <span id="out-biayaPotong">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Grand Total -->
+                        <div class="pt-2 pb-4">
+                            <span class="block text-slate-400 mb-1 text-sm">Total Estimasi Keseluruhan</span>
+                            <span id="out-grandTotal" class="block text-4xl font-black text-emerald-400 tracking-tight">
+                                Rp 0
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-800/80 dark:bg-slate-900/80 rounded-2xl p-4 text-center border border-slate-700/50">
+                            <span class="block text-slate-400 text-xs uppercase tracking-widest font-semibold mb-1">Harga Satuan Per Buku</span>
+                            <span id="out-totalPerBuku" class="block text-2xl font-bold text-white">
+                                Rp 0
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- INISIALISASI ICONS LUCIDE ---
+        lucide.createIcons();
+
+        // --- DARK MODE LOGIC ---
+        let isDarkMode = false;
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            const htmlEl = document.documentElement;
+            const iconContainer = document.getElementById('mode-icon-container');
+            const textContainer = document.getElementById('mode-text');
+            
+            if (isDarkMode) {
+                htmlEl.classList.add('dark');
+                textContainer.innerText = 'Light Mode';
+                iconContainer.innerHTML = '<i data-lucide="sun" class="h-5 w-5 text-yellow-500"></i>';
+            } else {
+                htmlEl.classList.remove('dark');
+                textContainer.innerText = 'Dark Mode';
+                iconContainer.innerHTML = '<i data-lucide="moon" class="h-5 w-5 text-indigo-500"></i>';
+            }
+            lucide.createIcons(); // redraw icons
+        }
+
+        // --- DATA HARGA BERDASARKAN TIER JUMLAH LEMBAR/BUKU ---
+        const priceData = {
+            'AC1': [{min: 1, price: 10000}, {min: 2, price: 8000}, {min: 6, price: 6500}, {min: 51, price: 5500}, {min: 101, price: 5200}, {min: 301, price: 5000}],
+            'AC2': [{min: 1, price: 9000}, {min: 2, price: 7000}, {min: 6, price: 5500}, {min: 51, price: 5000}, {min: 101, price: 4600}, {min: 301, price: 4000}],
+            'AP1': [{min: 1, price: 10000}, {min: 2, price: 8000}, {min: 6, price: 6500}, {min: 51, price: 5500}, {min: 101, price: 5200}, {min: 301, price: 5000}],
+            'AP2': [{min: 1, price: 15000}, {min: 2, price: 11000}, {min: 6, price: 9500}, {min: 51, price: 8000}, {min: 101, price: 7800}, {min: 301, price: 7400}],
+            'HVSW1': [{min: 1, price: 8000}, {min: 2, price: 6000}, {min: 6, price: 5000}, {min: 51, price: 4500}, {min: 101, price: 4000}, {min: 301, price: 3800}],
+            'HVSW2': [{min: 1, price: 14000}, {min: 2, price: 10500}, {min: 6, price: 8500}, {min: 51, price: 7500}, {min: 101, price: 7200}, {min: 301, price: 6800}],
+            'HVSBW1': [{min: 1, price: 2000}, {min: 2, price: 1800}, {min: 6, price: 1500}, {min: 51, price: 1200}, {min: 101, price: 1000}, {min: 301, price: 800}],
+            'HVSBW2': [{min: 1, price: 2500}, {min: 2, price: 2300}, {min: 6, price: 2000}, {min: 51, price: 1800}, {min: 101, price: 1500}, {min: 301, price: 1000}],
+            'LAM1': [{min: 1, price: 4000}, {min: 2, price: 3000}, {min: 6, price: 2500}, {min: 51, price: 2000}, {min: 101, price: 1800}],
+            'LAM2': [{min: 1, price: 8000}, {min: 2, price: 6000}, {min: 6, price: 5000}, {min: 51, price: 4000}, {min: 101, price: 3600}],
+        };
+
+        const finishingData = {
+            'Steples': [{min: 1, price: 3000}, {min: 6, price: 2500}, {min: 11, price: 2300}, {min: 51, price: 2000}],
+            'Spiral': [{min: 1, price: 17000}, {min: 6, price: 15000}, {min: 11, price: 11300}, {min: 51, price: 10000}],
+            'Lem Panas': [{min: 1, price: 10000}, {min: 6, price: 8000}, {min: 11, price: 7000}, {min: 51, price: 6000}],
+            'Hard Cover': [{min: 1, price: 75000}, {min: 6, price: 65000}, {min: 11, price: 55000}, {min: 51, price: 50000}],
+        };
+
+        // --- HELPER FUNCTIONS ---
+        function getTierPrice(tiers, qty) {
+            let currentPrice = 0;
+            for (let i = 0; i < tiers.length; i++) {
+                if (qty >= tiers[i].min) {
+                    currentPrice = tiers[i].price;
+                } else {
+                    break;
+                }
+            }
+            if (currentPrice === 0 && tiers.length > 0) currentPrice = tiers[0].price;
+            return currentPrice;
+        }
+
+        function formatRp(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        // --- FUNGSI KALKULASI UTAMA ---
+        function calculate() {
+            // Ambil Value dari Input
+            const jumlahBuku = Math.max(1, parseInt(document.getElementById('jumlahBuku').value) || 0);
+            const totalHalaman = Math.max(1, parseInt(document.getElementById('totalHalaman').value) || 0);
+            
+            const bahanCover = document.getElementById('bahanCover').value;
+            const sisiCover = document.getElementById('sisiCover').value;
+            const laminasiCover = document.getElementById('laminasiCover').value;
+            
+            const bahanIsi = document.getElementById('bahanIsi').value;
+            const sisiIsi = document.getElementById('sisiIsi').value;
+            const laminasiIsi = document.getElementById('laminasiIsi').value;
+
+            // Ambil Nilai Finishing Radio Button
+            let finishingEls = document.getElementsByName('finishing');
+            let finishing = 'Steples';
+            for(let el of finishingEls) {
+                if(el.checked) finishing = el.value;
+            }
+
+            // --- ATURAN LOGIKA KHUSUS ---
+            const radioLemPanas = document.getElementById('radio-LemPanas');
+            const radioHardCover = document.getElementById('radio-HardCover');
+
+            // 1. Jika bahan cover Art Carton, Hard Cover tidak bisa
+            if (bahanCover === 'AC' && finishing === 'Hard Cover') {
+                finishing = 'Lem Panas';
+                radioLemPanas.checked = true;
+            }
+            // 2. Jika bahan cover Art Paper, Lem Panas tidak bisa
+            if (bahanCover === 'AP' && finishing === 'Lem Panas') {
+                finishing = 'Steples';
+                document.querySelector('input[name="finishing"][value="Steples"]').checked = true;
+            }
+
+            // Disable radio secara otomatis
+            radioLemPanas.disabled = (bahanCover === 'AP');
+            radioHardCover.disabled = (bahanCover === 'AC');
+
+            // Tampilkan atau sembunyikan peringatan teks merah
+            document.getElementById('warn-LemPanas').style.display = (bahanCover === 'AP') ? 'block' : 'none';
+            document.getElementById('warn-HardCover').style.display = (bahanCover === 'AC') ? 'block' : 'none';
+
+
+            // --- KALKULASI MATEMATIKA ---
+            const penguranganCover = sisiCover === '2' ? 4 : 2;
+            const halamanIsi = Math.max(0, totalHalaman - penguranganCover);
+
+            const lembarA3CoverPerBuku = 1; 
+            const pembagiIsi = sisiIsi === '1' ? 2 : 4;
+            const lembarA3IsiPerBuku = Math.ceil(halamanIsi / pembagiIsi);
+
+            const totalLembarCover = lembarA3CoverPerBuku * jumlahBuku;
+            const totalLembarIsi = lembarA3IsiPerBuku * jumlahBuku;
+            const totalLembarSemua = totalLembarCover + totalLembarIsi;
+
+            const keyCover = bahanCover + sisiCover;
+            const hargaSatuanCover = totalLembarCover > 0 ? getTierPrice(priceData[keyCover], totalLembarCover) : 0;
+            const totalHargaCover = totalLembarCover * hargaSatuanCover;
+
+            const keyIsi = bahanIsi + sisiIsi;
+            const hargaSatuanIsi = totalLembarIsi > 0 ? getTierPrice(priceData[keyIsi], totalLembarIsi) : 0;
+            const totalHargaIsi = totalLembarIsi * hargaSatuanIsi;
+
+            const hargaSatuanLamCover = (laminasiCover !== 'Tidak' && totalLembarCover > 0) ? getTierPrice(priceData['LAM' + laminasiCover], totalLembarCover) : 0;
+            const totalHargaLamCover = totalLembarCover * hargaSatuanLamCover;
+
+            const hargaSatuanLamIsi = (laminasiIsi !== 'Tidak' && totalLembarIsi > 0) ? getTierPrice(priceData['LAM' + laminasiIsi], totalLembarIsi) : 0;
+            const totalHargaLamIsi = totalLembarIsi * hargaSatuanLamIsi;
+
+            const hargaSatuanFin = jumlahBuku > 0 ? getTierPrice(finishingData[finishing], jumlahBuku) : 0;
+            const totalHargaFin = jumlahBuku * hargaSatuanFin;
+
+            let totalHargaPotong = 0;
+            if (totalLembarSemua > 200) totalHargaPotong = 95000;
+            else if (totalLembarSemua > 100) totalHargaPotong = 75000;
+            else if (totalLembarSemua > 50) totalHargaPotong = 50000;
+            else if (totalLembarSemua > 10) totalHargaPotong = 25000;
+            else if (totalLembarSemua > 0) totalHargaPotong = 18000;
+
+            const grandTotal = totalHargaCover + totalHargaIsi + totalHargaLamCover + totalHargaLamIsi + totalHargaFin + totalHargaPotong;
+            const totalPerBuku = jumlahBuku > 0 ? grandTotal / jumlahBuku : 0;
+
+
+            // --- UPDATE ANTARMUKA (DOM) ---
+            document.getElementById('out-halamanIsi').innerText = halamanIsi + " Hal";
+            document.getElementById('out-totLembarCover').innerText = totalLembarCover + " lbr";
+            document.getElementById('out-lembarA3Isi').innerText = `Isi (${lembarA3IsiPerBuku} lbr/buku)`;
+            document.getElementById('out-totLembarIsi').innerText = totalLembarIsi + " lbr";
+            document.getElementById('out-totLembarSemua').innerText = totalLembarSemua + " lbr";
+
+            document.getElementById('out-txtHargaSatCover').innerText = `Cetak Cover (${formatRp(hargaSatuanCover)}/lbr)`;
+            document.getElementById('out-subCover').innerText = formatRp(totalHargaCover);
+
+            document.getElementById('out-txtHargaSatIsi').innerText = `Cetak Isi (${formatRp(hargaSatuanIsi)}/lbr)`;
+            document.getElementById('out-subIsi').innerText = formatRp(totalHargaIsi);
+
+            const rowLamCover = document.getElementById('row-lamCover');
+            if(laminasiCover !== 'Tidak') {
+                rowLamCover.classList.remove('hidden');
+                document.getElementById('out-txtHargaSatLamCover').innerText = `Lam. Cover (${formatRp(hargaSatuanLamCover)}/lbr)`;
+                document.getElementById('out-subLamCover').innerText = formatRp(totalHargaLamCover);
+            } else {
+                rowLamCover.classList.add('hidden');
+            }
+
+            const rowLamIsi = document.getElementById('row-lamIsi');
+            if(laminasiIsi !== 'Tidak') {
+                rowLamIsi.classList.remove('hidden');
+                document.getElementById('out-txtHargaSatLamIsi').innerText = `Lam. Isi (${formatRp(hargaSatuanLamIsi)}/lbr)`;
+                document.getElementById('out-subLamIsi').innerText = formatRp(totalHargaLamIsi);
+            } else {
+                rowLamIsi.classList.add('hidden');
+            }
+
+            document.getElementById('out-txtHargaSatFin').innerText = `Jilid ${finishing} (${formatRp(hargaSatuanFin)}/buku)`;
+            document.getElementById('out-subFin').innerText = formatRp(totalHargaFin);
+
+            document.getElementById('out-biayaPotong').innerText = formatRp(totalHargaPotong);
+            document.getElementById('out-grandTotal').innerText = formatRp(grandTotal);
+            document.getElementById('out-totalPerBuku').innerText = formatRp(totalPerBuku);
+        }
+
+        // Jalankan kalkulasi saat halaman pertama kali dimuat
+        window.onload = function() {
+            calculate();
+        };
+
+    </script>
+</body>
+</html>
