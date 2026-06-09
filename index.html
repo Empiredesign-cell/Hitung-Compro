@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Harga Cetak Buku</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,12 +20,14 @@
         }
     </script>
     
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 py-8 px-4 sm:px-6 lg:px-8 font-sans min-h-screen">
 
     <div class="max-w-6xl mx-auto space-y-8">
         
+        <!-- Header Bar -->
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-slate-900 p-4 sm:px-8 sm:py-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
             <div class="flex items-center gap-4">
                 <div class="p-3.5 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-600/20">
@@ -45,8 +48,10 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
+            <!-- Kolom Kiri: Form Input -->
             <div class="lg:col-span-2 space-y-6">
                 
+                <!-- Bagian Informasi Utama -->
                 <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
                     <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
                         <i data-lucide="book" class="h-5 w-5 text-blue-500"></i>
@@ -72,6 +77,7 @@
                     </div>
                 </div>
 
+                <!-- Bagian Spesifikasi Cover -->
                 <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
                     <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
                         <i data-lucide="file-text" class="h-5 w-5 text-orange-500"></i>
@@ -103,6 +109,7 @@
                     </div>
                 </div>
 
+                <!-- Bagian Spesifikasi Isi -->
                 <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
                     <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
                         <i data-lucide="layers" class="h-5 w-5 text-emerald-500"></i>
@@ -141,6 +148,7 @@
                     </div>
                 </div>
 
+                <!-- Bagian Finishing -->
                 <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
                     <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
                         <i data-lucide="scissors" class="h-5 w-5 text-pink-500"></i>
@@ -181,6 +189,9 @@
                 </div>
             </div>
 
+            </div>
+
+            <!-- Kolom Kanan: Rincian Kalkulasi -->
             <div class="lg:col-span-1">
                 <div class="bg-slate-900 dark:bg-slate-800 rounded-3xl shadow-xl p-6 sm:p-8 text-white sticky top-8 border border-slate-800 dark:border-slate-700">
                     <div class="flex items-center gap-3 mb-6 pb-6 border-b border-slate-700/50">
@@ -192,6 +203,7 @@
 
                     <div class="space-y-5 text-sm">
                         
+                        <!-- Rincian Kebutuhan Kertas -->
                         <div class="pb-5 border-b border-slate-700/50">
                             <h3 class="font-semibold text-blue-300 mb-3 text-xs uppercase tracking-wider">Material Cetak (A3)</h3>
                             <div class="flex justify-between items-center mb-2">
@@ -208,6 +220,7 @@
                             </div>
                         </div>
 
+                        <!-- Rincian Harga Partisi -->
                         <div class="pb-5 border-b border-slate-700/50 space-y-3">
                             <div>
                                 <div class="flex justify-between text-slate-400 text-xs mb-0.5">
@@ -250,6 +263,7 @@
                             </div>
                         </div>
 
+                        <!-- Rincian Finishing & Potong -->
                         <div class="pb-5 border-b border-slate-700/50 space-y-3">
                             <div>
                                 <div class="flex justify-between text-slate-400 text-xs mb-0.5">
@@ -267,6 +281,7 @@
                             </div>
                         </div>
 
+                        <!-- Grand Total -->
                         <div class="pt-2 pb-4">
                             <span class="block text-slate-400 mb-1 text-sm">Total Estimasi Keseluruhan</span>
                             <span id="out-grandTotal" class="block text-4xl font-black text-emerald-400 tracking-tight">
@@ -315,7 +330,8 @@
         // --- DATA HARGA ---
         const priceData = {
             'AC1': [{min: 1, price: 10000}, {min: 2, price: 8000}, {min: 6, price: 6500}, {min: 51, price: 5500}, {min: 101, price: 5200}, {min: 301, price: 5000}],
-            'AC2': [{min: 1, price: 9000}, {min: 2, price: 7000}, {min: 6, price: 5500}, {min: 51, price: 5000}, {min: 101, price: 4600}, {min: 301, price: 4000}],
+            // PERBAIKAN HARGA AC2 DI SINI
+            'AC2': [{min: 1, price: 16000}, {min: 2, price: 12000}, {min: 6, price: 10000}, {min: 51, price: 9000}, {min: 101, price: 8400}, {min: 301, price: 8000}],
             'AP1': [{min: 1, price: 10000}, {min: 2, price: 8000}, {min: 6, price: 6500}, {min: 51, price: 5500}, {min: 101, price: 5200}, {min: 301, price: 5000}],
             'AP2': [{min: 1, price: 15000}, {min: 2, price: 11000}, {min: 6, price: 9500}, {min: 51, price: 8000}, {min: 101, price: 7800}, {min: 301, price: 7400}],
             'HVSW1': [{min: 1, price: 8000}, {min: 2, price: 6000}, {min: 6, price: 5000}, {min: 51, price: 4500}, {min: 101, price: 4000}, {min: 301, price: 3800}],
